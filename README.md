@@ -4,7 +4,7 @@ A local, zero-cost healthcare voice reception agent — RAG + LangGraph agent +
 voice pipeline + evaluation harness. Built to mirror a production AI
 receptionist system, as a hands-on project.
 
-> **Build status: ** All 5 phases — RAG, LLM agent, memory +
+> **Build status:** All 5 phases — RAG, LLM agent, memory +
 > observability + API, voice pipeline, evaluation harness + tests.
 
 ---
