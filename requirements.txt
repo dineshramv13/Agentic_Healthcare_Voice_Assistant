@@ -1,0 +1,85 @@
+# ===========================================
+# AI-Local — requirements.txt
+# Installed incrementally across phases.
+# Currently includes: Phases 1-5 (complete project)
+# ===========================================
+
+# --- Config ---
+pydantic>=2.6.0
+pydantic-settings>=2.2.0
+python-dotenv>=1.0.1
+
+# --- RAG: chunking, vector store, embeddings, hybrid retrieval ---
+langchain-text-splitters>=0.2.0
+chromadb>=0.5.0
+sentence-transformers>=3.0.0
+rank-bm25>=0.2.2
+
+# NOTE: sentence-transformers will pull in torch automatically (CPU build).
+# First run will download ~2 small models from HuggingFace:
+#   - sentence-transformers/all-MiniLM-L6-v2   (embeddings, ~90MB)
+#   - cross-encoder/ms-marco-MiniLM-L-6-v2     (reranker, ~135MB)
+# Both are free, no API key, cached locally after first download.
+
+# --- Phase 2: LLM client, prompts, agent graph ---
+requests>=2.31.0
+pyyaml>=6.0.1
+langgraph>=0.2.0
+
+# NOTE: langgraph pulls in langchain-core as a dependency automatically.
+# LLM calls go through OpenRouter (https://openrouter.ai) — free models only,
+# suffixed ":free" in the model name. Get a free API key at
+# https://openrouter.ai/keys (no card required) and put it in .env as
+# OPENROUTER_API_KEY.
+
+# --- Phase 3: Memory, observability, API server ---
+fastapi>=0.110.0
+uvicorn[standard]>=0.29.0
+
+# NOTE: memory/session.py uses Python's built-in sqlite3 — no install needed.
+# Run the server with: uvicorn api.server:app --reload --port 8000
+# Then open http://127.0.0.1:8000/docs for the interactive Swagger UI.
+
+# --- Phase 4: Voice pipeline (STT + VAD + TTS) ---
+openai-whisper>=20231117
+sounddevice>=0.4.6
+numpy>=1.24.0
+pyttsx3>=2.90
+python-multipart>=0.0.9
+
+# =====================================================================
+# IMPORTANT — Phase 4 has SYSTEM-LEVEL (non-pip) dependencies:
+#
+# 1. ffmpeg (required by openai-whisper for audio decoding):
+#      Ubuntu/Debian:  sudo apt update && sudo apt install ffmpeg
+#      macOS:          brew install ffmpeg
+#      Windows:        choco install ffmpeg   (or scoop install ffmpeg)
+#
+# 2. PortAudio (required by sounddevice for microphone access):
+#      Ubuntu/Debian:  sudo apt install portaudio19-dev
+#      macOS:          brew install portaudio
+#      Windows:        no extra step needed (bundled in the sounddevice wheel)
+#
+# 3. Python version: Whisper does NOT support Python 3.13+ as of this
+#    writing. Use Python 3.10, 3.11, or 3.12 for this project.
+#
+# 4. On Linux, pyttsx3 uses espeak as its backend — if TTS produces no
+#    audio: sudo apt install espeak
+#
+# First run of voice/stt.py downloads the Whisper "base" model (~150MB)
+# from Hugging Face automatically, cached at ~/.cache/whisper/. After
+# that, everything (STT + TTS) runs fully offline, no API key, no cost.
+# =====================================================================
+
+# --- Phase 5: Evaluation harness + unit tests ---
+pytest>=8.0.0
+
+# NOTE: eval/metrics.py implements RAGAS-style metrics (faithfulness,
+# answer_relevance, context_precision) using OUR OWN free OpenRouter LLM
+# as judge — NOT the `ragas` pip package, which defaults to needing an
+# OpenAI key for its judge model and tends to pull in conflicting
+# dependency versions. Same metrics, zero extra
+# cost or dependency risk.
+#
+# Run the eval harness:    python eval/run_eval.py
+# Run the unit tests:      pytest tests/ -v
