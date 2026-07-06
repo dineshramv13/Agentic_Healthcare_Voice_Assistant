@@ -8,9 +8,6 @@ FallbackNode: handles two distinct cases gracefully, without an LLM call:
        patient, this node requests a human callback and tells the patient
        honestly that it couldn't fully verify the answer.
 
-This is the node that answers "how do you handle agent failures gracefully"
-with a real file instead of a try/except scattered across every node.
-
 Input:  state["intent"], state["verified"], state["session_id"]
 Output: state updates: response, final_response
 """

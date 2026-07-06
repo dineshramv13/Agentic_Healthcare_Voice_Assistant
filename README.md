@@ -4,7 +4,7 @@ A local, zero-cost healthcare voice reception agent — RAG + LangGraph agent +
 voice pipeline + evaluation harness. Built to mirror a production AI
 receptionist system, as a hands-on project.
 
-> **Build status: complete.** All 5 phases done — RAG, LLM agent, memory +
+> **Build status: ** All 5 phases — RAG, LLM agent, memory +
 > observability + API, voice pipeline, evaluation harness + tests.
 
 ---
@@ -239,7 +239,7 @@ python eval/run_eval.py --prompt-version v1
 python eval/run_eval.py --prompt-version v2
 ```
 
-Compare the two `eval_results/report_*.json` files — this is your concrete answer to "how do you A/B test prompts in production."
+Compare the two `eval_results/report_*.json` files.
 
 ### 9. Try the text demo
 
